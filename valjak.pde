@@ -19,7 +19,7 @@ void draw() {
   noStroke();
   fill(255, 255, 255);
   translate(0, -40, 0);
-  crtaj_valjak(b, slika.height, 30); 
+  crtaj_valjak(b, slika.height, 15); 
 }
 
 void crtaj_valjak(float radijus, float visina,int broj_stranica)
@@ -37,6 +37,8 @@ void crtaj_valjak(float radijus, float visina,int broj_stranica)
     kut += kutpovecavanja;
   }
   endShape();
+  //kada stavljamo sliku prvi put, ovo dobro radi
+  stavi_sliku(radijus, kut, kutpovecavanja, broj_stranica); 
   
   //gornji krug
   kut = 0;  
@@ -59,4 +61,21 @@ void crtaj_valjak(float radijus, float visina,int broj_stranica)
   }
     endShape();
   
+}
+void stavi_sliku(float radijus,float kut, float kutpovecavanja, int broj_stranica)
+{
+  pushMatrix(); 
+  kut=2*PI;
+  int i=0;
+  for(i=0; i<broj_stranica; i++)
+  {
+  translate(radijus*cos(kut-i*kutpovecavanja), 0, radijus*sin(kut-i*kutpovecavanja));
+  rotateY(PI/2+kutpovecavanja/2+i*kutpovecavanja); 
+  image(slika, 0,0);
+  rotateY(-PI/2-kutpovecavanja/2-i*kutpovecavanja); 
+  translate(-radijus*cos(kut-i*kutpovecavanja), 0, -radijus*sin(kut-i*kutpovecavanja));
+
+  }
+   
+  popMatrix();
 }
