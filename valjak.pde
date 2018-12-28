@@ -1,17 +1,19 @@
   PImage slika; 
+  PImage mask; 
+
   float b; 
 
 void setup() {
   size(800, 800, P3D);
   slika=loadImage("slika.png"); 
-  b=slika.width/(2*PI);
+  b=slika.width/(2*PI); //b je radijus valjka, širina slike/2pi
 }
 
 void draw() {
   background(0);
   lights();
   translate(width / 2, height/3);
-  if(mousePressed)
+  if(mousePressed)//Za kameru, treba podesiti, nije baš idealno
   {
     rotateY(map(mouseX, 0, width, 0, PI));
     rotateZ(map(mouseY, 0, height, 0, -PI));
@@ -37,7 +39,8 @@ void crtaj_valjak(float radijus, float visina,int broj_stranica)
     kut += kutpovecavanja;
   }
   endShape();
-  //kada stavljamo sliku prvi put, ovo dobro radi
+  
+  //tu sam pozvala fju za stavljanje slika na valjak
   stavi_sliku(radijus, kut, kutpovecavanja, broj_stranica); 
   
   //gornji krug
@@ -64,7 +67,7 @@ void crtaj_valjak(float radijus, float visina,int broj_stranica)
 }
 void stavi_sliku(float radijus,float kut, float kutpovecavanja, int broj_stranica)
 {
-  float pomak_slike=slika.width/broj_stranica; 
+  float pomak_slike=slika.width/broj_stranica; //za koliko se miče odrezani pravokutnik
   pushMatrix(); 
   kut=2*PI;
   int i=0;
@@ -72,11 +75,36 @@ void stavi_sliku(float radijus,float kut, float kutpovecavanja, int broj_stranic
   {
   translate(radijus*cos(kut-i*kutpovecavanja), 0, radijus*sin(kut-i*kutpovecavanja));
   rotateY(PI/2+kutpovecavanja/2+i*kutpovecavanja); 
+  kreiraj_masku(i, broj_stranica);
+  if(i%5==0) //ovo sam stavila za isprobati, ali sad se vidi da nešto ovdje ne štima
+  //ili je kriva maska ili su krive translacija i rotacija
+  {
+  slika.mask(mask);
   image(slika,-pomak_slike*i,0);
+  }
   rotateY(-PI/2-kutpovecavanja/2-i*kutpovecavanja); 
   translate(-radijus*cos(kut-i*kutpovecavanja), 0, -radijus*sin(kut-i*kutpovecavanja));
 
   }
    
   popMatrix();
+}
+
+
+void kreiraj_masku(int koji, int broj_stranica)
+{
+mask = createImage(slika.width, slika.height, RGB);
+  mask.loadPixels();
+  for(int x=0; x<mask.height; x++)
+  for(int y=0; y<mask.width; y++)
+  {
+    int i=mask.width*x+y; 
+    if(y<(mask.width/broj_stranica)*(koji+1)&&y>(mask.width/broj_stranica)*(koji)) 
+      mask.pixels[i]=color(255,255,255);
+    else
+      mask.pixels[i]=color(0,0,0);
+
+  }
+ 
+  mask.updatePixels();
 }
