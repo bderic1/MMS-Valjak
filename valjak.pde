@@ -64,6 +64,7 @@ void crtaj_valjak(float radijus, float visina,int broj_stranica)
 }
 void stavi_sliku(float radijus,float kut, float kutpovecavanja, int broj_stranica)
 {
+  float pomak_slike=slika.width/broj_stranica; 
   pushMatrix(); 
   kut=2*PI;
   int i=0;
@@ -71,7 +72,7 @@ void stavi_sliku(float radijus,float kut, float kutpovecavanja, int broj_stranic
   {
   translate(radijus*cos(kut-i*kutpovecavanja), 0, radijus*sin(kut-i*kutpovecavanja));
   rotateY(PI/2+kutpovecavanja/2+i*kutpovecavanja); 
-  image(slika, 0,0);
+  image(slika,-pomak_slike*i,0);
   rotateY(-PI/2-kutpovecavanja/2-i*kutpovecavanja); 
   translate(-radijus*cos(kut-i*kutpovecavanja), 0, -radijus*sin(kut-i*kutpovecavanja));
 
