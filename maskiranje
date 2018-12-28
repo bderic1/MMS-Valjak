@@ -1,0 +1,29 @@
+  PImage slika; 
+  PImage mask; 
+  int broj_stranica=15;
+  int koji=14;
+  void setup() {
+  size(800, 800, P3D);
+  slika=loadImage("slika.png"); 
+  mask = createImage(slika.width, slika.height, RGB);
+  mask.loadPixels();
+  
+  for(int x=0; x<mask.height; x++)
+  for(int y=0; y<mask.width; y++)
+  {
+    int i=mask.width*x+y; 
+    if(y<(mask.width/broj_stranica)*(koji+1)&&y>(mask.width/broj_stranica)*(koji)) 
+      mask.pixels[i]=color(255,255,255);
+    else
+      mask.pixels[i]=color(0,0,0);
+
+  }
+ 
+  mask.updatePixels();
+}
+void draw()
+{
+  //image(mask, 0, 0);
+  slika.mask(mask);
+  image(slika,0,0);
+}
